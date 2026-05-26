@@ -1,0 +1,206 @@
+/* ─── Back Link ─────────────────────────────────────────────────── */
+.cs-back {
+  padding-top: var(--space-6);
+}
+
+.cs-back-link {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.cs-back-link:hover {
+  color: var(--text-primary);
+}
+
+/* ─── Page Header ───────────────────────────────────────────────── */
+.cs-header {
+  padding: var(--space-6) 0 var(--space-8);
+}
+
+.cs-header-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.cs-type-badge {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.cs-type-badge--professional {
+  background: var(--tag-teal-bg);
+  color: var(--tag-teal-text);
+}
+
+.cs-type-badge--personal {
+  background: var(--tag-purple-bg);
+  color: var(--tag-purple-text);
+}
+
+.cs-company {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.cs-period {
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+.cs-title {
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 4vw, 36px);
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  margin-bottom: var(--space-3);
+}
+
+.cs-subtitle {
+  font-size: 15px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+  max-width: 560px;
+}
+
+/* ─── Section Layout ────────────────────────────────────────────── */
+.cs-section {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: var(--space-8);
+  padding: var(--space-8) 0;
+}
+
+.cs-section--last {
+  padding-bottom: var(--space-16);
+}
+
+.cs-section-label {
+  padding-top: 3px;
+}
+
+.cs-section-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* ─── Section Title (challenge / architecture subtitle) ─────────── */
+.cs-section-title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+  line-height: 1.3;
+}
+
+/* ─── Body Text ─────────────────────────────────────────────────── */
+.cs-body {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  max-width: 580px;
+}
+
+/* ─── Bullet Points ─────────────────────────────────────────────── */
+.cs-components-heading {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: calc(var(--space-2) * -1);
+}
+
+.cs-points {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: 0;
+  max-width: 580px;
+}
+
+.cs-point {
+  display: flex;
+  gap: var(--space-1);
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  padding-left: var(--space-4);
+  position: relative;
+}
+
+.cs-point::before {
+  content: '●';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  font-size: 6px;
+  color: var(--text-tertiary);
+  line-height: 1;
+}
+
+.cs-point-label {
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* ─── Innovations ───────────────────────────────────────────────── */
+.cs-innovation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.cs-innovation-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.1px;
+}
+
+/* ─── Stack List ────────────────────────────────────────────────── */
+.cs-stack-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 580px;
+}
+
+.cs-stack-item {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.cs-stack-value {
+  color: var(--text-secondary);
+}
+
+/* ─── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .cs-header {
+    padding: var(--space-5) 0 var(--space-6);
+  }
+
+  .cs-section {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    padding: var(--space-6) 0;
+  }
+
+  .cs-section--last {
+    padding-bottom: var(--space-12);
+  }
+}

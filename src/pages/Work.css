@@ -1,0 +1,126 @@
+/* ─── Page Header ───────────────────────────────────────────────── */
+.work-header {
+  padding: var(--space-10) 0 var(--space-8);
+}
+
+.work-title {
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 4vw, 36px);
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  margin-bottom: var(--space-3);
+}
+
+.work-subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  max-width: 480px;
+  line-height: 1.65;
+}
+
+/* ─── Group ─────────────────────────────────────────────────────── */
+.work-group {
+  padding: var(--space-4) 0 var(--space-8);
+}
+
+.work-group-label {
+  margin-bottom: var(--space-5);
+}
+
+/* ─── Card List ─────────────────────────────────────────────────── */
+.work-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.work-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+
+.work-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.work-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+  min-width: 0;
+}
+
+.work-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.work-card-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -0.1px;
+}
+
+.work-card-meta {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.work-card-period {
+  color: var(--text-tertiary);
+}
+
+.work-card-summary {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.work-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.work-card-cta {
+  font-size: 13px;
+  color: var(--accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-top: 2px;
+  transition: color 0.15s;
+}
+
+.work-card:hover .work-card-cta {
+  color: var(--accent-hover);
+}
+
+/* ─── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .work-header {
+    padding: var(--space-8) 0 var(--space-6);
+  }
+
+  .work-card {
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .work-card-cta {
+    align-self: flex-start;
+  }
+}

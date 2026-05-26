@@ -1,0 +1,134 @@
+/* ─── Page Header ───────────────────────────────────────────────── */
+.resume-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-8);
+  padding: var(--space-10) 0 var(--space-8);
+}
+
+.resume-title {
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 4vw, 36px);
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  margin-bottom: var(--space-3);
+}
+
+.resume-subtitle {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-3);
+  letter-spacing: 0.02em;
+}
+
+.resume-summary {
+  font-size: 15px;
+  color: var(--text-secondary);
+  max-width: 480px;
+  line-height: 1.65;
+}
+
+.resume-header-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* ─── Section Layout ────────────────────────────────────────────── */
+.resume-section {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: var(--space-8);
+  padding: var(--space-8) 0;
+}
+
+.resume-section-label {
+  padding-top: 2px;
+}
+
+.resume-section-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Experience / Education Items ─────────────────────────────── */
+.resume-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.resume-item-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.resume-item-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -0.1px;
+}
+
+.resume-item-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  display: block;
+}
+
+.resume-item-period {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.resume-item-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 540px;
+}
+
+.resume-item-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: var(--space-5) 0;
+}
+
+/* ─── Skills ────────────────────────────────────────────────────── */
+.skills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ─── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .resume-header {
+    flex-direction: column;
+    gap: var(--space-5);
+    padding: var(--space-8) 0 var(--space-6);
+  }
+
+  .resume-header-links {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .resume-section {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    padding: var(--space-6) 0;
+  }
+
+  .resume-item-header {
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+}
