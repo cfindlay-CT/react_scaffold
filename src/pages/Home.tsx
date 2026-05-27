@@ -1,10 +1,13 @@
+import avatarImg from '../assets/avatar.jpg'
 import './Home.css'
 
 export default function Home() {
   return (
     <div className="container">
       <section className="hero">
-        <div className="hero-avatar">YN</div>
+        <div className="hero-avatar-clip">
+          <img src={avatarImg} alt="Clinton Findlay" className="hero-avatar" />
+        </div>
         <h1 className="hero-name">Clinton Findlay</h1>
         <p className="hero-bio">
           Product designer &amp; developer crafting thoughtful digital experiences.

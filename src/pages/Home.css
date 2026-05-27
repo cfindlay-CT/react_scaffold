@@ -7,20 +7,24 @@
   gap: var(--space-4);
 }
 
-.hero-avatar {
-  width: 64px;
-  height: 64px;
+.hero-avatar-clip {
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
-  background: var(--accent-light);
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: 500;
-  font-family: var(--font-sans);
+  overflow: hidden;
   margin-bottom: var(--space-2);
-  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow-md);
+  flex-shrink: 0;
+}
+
+.hero-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  transform: scale(1.05);
+  transform-origin: center 48%;
 }
 
 .hero-name {
