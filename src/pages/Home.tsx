@@ -14,13 +14,13 @@ export default function Home() {
           Currently open to new opportunities.
         </p>
         <div className="hero-links">
-          <a href="https://github.com" target="_blank" rel="noreferrer" className="pill">
+          <a href="https://github.com/cfindlay-CT" target="_blank" rel="noreferrer" className="pill">
             GitHub
           </a>
-          <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="pill">
+          <a href="https://linkedin.com/in/clintonfindlay" target="_blank" rel="noreferrer" className="pill">
             LinkedIn
           </a>
-          <a href="mailto:you@example.com" className="pill">
+          <a href="mailto:cfindlay@comtopllc.com" className="pill">
             Email
           </a>
         </div>
