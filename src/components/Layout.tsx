@@ -22,6 +22,9 @@ export default function Layout() {
             >
               Work
             </NavLink>
+            <NavLink to="/book" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+              Book a Call
+            </NavLink>
           </nav>
         </div>
       </header>
