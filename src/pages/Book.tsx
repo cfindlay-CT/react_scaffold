@@ -192,6 +192,16 @@ export default function Book() {
           }}>
             <h2>Request sent!</h2>
             <p>Thanks {form.name}, Clinton will reply to <strong>{form.email}</strong> to confirm your time.</p>
+
+            <hr style={{ margin: '16px 0', border: 'none', borderTop: '1px solid #eee' }} />
+
+            <p style={{ fontSize: '14px', color: '#666' }}>No email app opened? Send manually:</p>
+            <div style={{ textAlign: 'left', fontSize: '13px', background: '#f5f5f5', padding: '12px', borderRadius: '4px' }}>
+              <p><strong>To:</strong> cfindlay@comtopllc.com</p>
+              <p><strong>Subject:</strong> 15-min call request</p>
+              <p><strong>Body:</strong> Hi Clinton, I'd like to book a 15-min call. Name: {form.name}, Email: {form.email}</p>
+            </div>
+
             <button
               onClick={() => setSubmitted(false)}
               style={{
