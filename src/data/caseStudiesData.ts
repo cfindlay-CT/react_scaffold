@@ -146,6 +146,114 @@ export const caseStudies: CaseStudy[] = [
       { label: 'Patterns', value: 'Bulk Copy (ETL), Repository Pattern, Interface-Driven Design, Async/Await Concurrency' },
     ],
   },
+  {
+    id: 'cs-2',
+    slug: 'test-architecture-optimization',
+    title: 'Scalable Test Architecture & Service Optimization',
+    subtitle: 'Modernizing a Legacy Backend Testing Suite and Refining Core Business Logic for Reliability at Scale',
+    company: null,
+    period: '',
+    type: 'professional',
+    tags: ['Test Engineering', 'Backend Development', 'DevOps', 'Data Architecture'],
+    summary:
+      'Overhauled a legacy backend testing suite by introducing fixture-based isolation patterns and optimizing core service logic — eliminating flaky tests, improving data integrity, and establishing a scalable blueprint for future development.',
+
+    executiveSummary:
+      'This project involved a comprehensive modernization of a legacy backend testing suite and the refinement of core business logic. By transitioning to a standardized, fixture-based testing architecture and optimizing data processing services, the system achieved higher reliability, eliminated cross-test interference, and streamlined data extraction for reporting and analytics.',
+
+    challengeTitle: 'The Instability Problem',
+    challengeIntro:
+      'The existing test suite suffered from chronic instability rooted in shared state and inconsistent configuration. Three compounding issues made the system unreliable and costly to maintain:',
+    challengePoints: [
+      {
+        label: 'State Leakage',
+        description:
+          'Tests shared mutable state across runs, causing intermittent failures that were difficult to reproduce and trace — classic "flaky test" behavior that eroded team confidence in the suite.',
+      },
+      {
+        label: 'Inconsistent Environments',
+        description:
+          'The test runner lacked cross-platform support, producing different results across developer machines and CI/CD pipelines and blocking reliable continuous integration.',
+      },
+      {
+        label: 'Data Integrity Gaps',
+        description:
+          'Core service logic returned inaccurate data due to missing filtering and insufficient edge-case coverage, exposing end-users and reporting systems to stale or invalid records.',
+      },
+    ],
+
+    architectureSubtitle: 'A Fixture-First Architecture',
+    architectureIntro:
+      'The solution centered on a fixture-based testing architecture that enforced clean isolation at every layer, paired with targeted service-layer optimizations to close data integrity gaps.',
+    architectureComponents: [
+      {
+        label: 'Centralized State Management',
+        description:
+          'Specialized fixtures were developed to own dependency injection and mock configurations, providing a single authoritative setup path shared across the entire test suite.',
+      },
+      {
+        label: 'Isolation Patterns',
+        description:
+          'Every test case was refactored to operate in a clean, idempotent environment. Teardown hooks and scoped fixtures ensured no test could pollute the state of any subsequent run.',
+      },
+      {
+        label: 'Cross-Platform Orchestration',
+        description:
+          'The test runner configuration was redesigned to execute consistently across developer environments and CI/CD pipelines, eliminating environment-specific failures.',
+      },
+    ],
+
+    innovations: [
+      {
+        letter: 'A',
+        title: 'Conditional Filtering for Data Hygiene',
+        description:
+          'Advanced filtering logic was implemented at the service layer to ensure only relevant, active records flow through the application. This addressed upstream data quality issues that had been silently corrupting downstream reports.',
+      },
+      {
+        letter: 'B',
+        title: 'High-Performance Data Extraction',
+        description:
+          'Complex queries against both graph and relational databases were rewritten to reduce execution time and resource consumption, enabling efficient extraction of active user metrics and engagement statistics for KPI tracking.',
+      },
+      {
+        letter: 'C',
+        title: 'Comprehensive Edge-Case Coverage',
+        description:
+          'Systematic test coverage was added for edge cases involving complex user roles and permissions — scenarios that previously lacked any verification, leaving the system vulnerable to regressions during feature expansion.',
+      },
+    ],
+
+    results: [
+      {
+        label: 'Architectural Stability',
+        description:
+          'Established a scalable blueprint for all future unit and integration tests, reducing the time required to write and debug new tests across the engineering team.',
+      },
+      {
+        label: 'Enhanced Reliability',
+        description:
+          'Eliminated test pollution entirely, resulting in a predictable and trustworthy testing suite that the team could act on with confidence.',
+      },
+      {
+        label: 'Performance Gains',
+        description:
+          'Improved the response time of background data processing tasks and reporting functions by optimizing multi-database query paths.',
+      },
+      {
+        label: 'Clean Data Model',
+        description:
+          'Simplified internal data relationships by deprecating legacy structures, producing a more maintainable codebase and cleaner data flowing to reporting systems.',
+      },
+    ],
+
+    stackCategories: [
+      { label: 'Test Engineering', value: 'Fixture Patterns, Mock State Isolation, Idempotent Test Design' },
+      { label: 'Backend Development', value: 'Service-Layer Optimization, Role & Permission Logic, Conditional Filtering' },
+      { label: 'DevOps & Tooling', value: 'Cross-Platform Test Runners, CI/CD Orchestration Scripts' },
+      { label: 'Data Architecture', value: 'Graph Database Queries, Relational SQL Optimization, Metric Aggregation' },
+    ],
+  },
 ]
 
 export function getCaseStudyBySlug(slug: string): CaseStudy | undefined {
