@@ -17,7 +17,7 @@ export default function Home() {
           <a href="https://github.com/cfindlay-CT" target="_blank" rel="noreferrer" className="pill">
             GitHub
           </a>
-          <a href="https://linkedin.com/in/clintonfindlay" target="_blank" rel="noreferrer" className="pill">
+          <a href="https://www.linkedin.com/in/clinton-findlay-5a700725/" target="_blank" rel="noreferrer" className="pill">
             LinkedIn
           </a>
           <a href="mailto:cfindlay@comtopllc.com" className="pill">
