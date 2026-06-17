@@ -138,14 +138,22 @@ export const resumeData = {
       description:
         'Building a RESTful web service in Python as a hands-on approach to learning the language. Exploring Python\'s ecosystem for backend development including routing, data handling, and API design patterns.',
     },
+    // {
+    //   id: 'proj-8',
+    //   title: 'Personal Resume Application',
+    //   company: null,
+    //   type: 'personal',
+    //   description:
+    //     'Designed and built this interactive resume application in React, using it as a sandbox to sharpen modern React skills including component architecture, hooks, and state management outside of the Angular ecosystem.',
+    // },
     {
-      id: 'proj-8',
-      title: 'Personal Resume Application',
-      company: null,
+      id: 'proj-9',
+      title: 'LinkedIn Content Pipeline',
+      company: 'Comtop LLC',
       type: 'personal',
       description:
-        'Designed and built this interactive resume application in React, using it as a sandbox to sharpen modern React skills including component architecture, hooks, and state management outside of the Angular ecosystem.',
-    },
+        'A full-stack personal productivity tool that automates LinkedIn content creation end to end. Built with React, Azure Functions (Python), and Azure Table Storage, it uses a voice profile system to generate posts via the Anthropic Claude API that match my writing style — then publishes directly to LinkedIn via the REST API. Topic to published post in under 2 minutes.',
+    }
   ],
 
   links: [

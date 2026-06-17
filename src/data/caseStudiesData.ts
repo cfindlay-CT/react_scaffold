@@ -254,6 +254,111 @@ export const caseStudies: CaseStudy[] = [
       { label: 'Data Architecture', value: 'Graph Database Queries, Relational SQL Optimization, Metric Aggregation' },
     ],
   },
+  {
+  id: 'cs-3',
+  slug: 'linkedin-content-pipeline',
+  title: 'Building an AI-Powered LinkedIn Content Pipeline',
+  subtitle: 'A Full-Stack Personal Productivity Tool for Voice-Matched Post Generation and One-Click Publishing',
+  company: null,
+  period: '2026',
+  type: 'personal',
+  tags: ['Azure Functions', 'React', 'Python', 'Claude AI', 'LinkedIn API'],
+  summary:
+    'Built a personal tool that takes a topic to a published LinkedIn post in under 2 minutes — using a voice profile system and Claude AI to generate content that sounds like me, not like generic AI output.',
+
+  executiveSummary:
+    'This case study documents the design and build of a personal content pipeline that automates the full LinkedIn publishing workflow. The system uses a voice profile stored in Azure Table Storage to dynamically construct a system prompt for the Anthropic Claude API, generating posts that match a specific writing style and tone. A React frontend guides the user from topic selection through draft review to one-click publishing via the LinkedIn REST API — including an automatic first comment for the portfolio link.',
+
+  challengeTitle: 'The Content Consistency Problem',
+  challengeIntro:
+    'Creating consistent, high-quality LinkedIn content manually suffers from three compounding problems:',
+  challengePoints: [
+    {
+      label: 'Voice Drift',
+      description:
+        'Writing from scratch each time leads to inconsistent tone, sentence structure, and word choices — especially when posting infrequently.',
+    },
+    {
+      label: 'Time Cost',
+      description:
+        'Drafting, editing, formatting, and publishing a single post can take 30–60 minutes when done manually.',
+    },
+    {
+      label: 'No Revision Loop',
+      description:
+        'Generic AI tools generate a draft but offer no structured way to request targeted revisions while preserving the original voice and topic.',
+    },
+  ],
+
+  architectureSubtitle: 'A Three-Layer Pipeline',
+  architectureIntro:
+    'The solution connects a React frontend, a Python Azure Functions backend, and two external APIs — the Anthropic Claude API for generation and the LinkedIn REST API for publishing — through a shared voice profile stored in Azure Table Storage.',
+  architectureComponents: [
+    {
+      label: 'The Voice Profile System',
+      description:
+        'A structured profile stored in Azure Table Storage captures identity, tone, sentence style, CTA preferences, words to avoid, words to use, and platform settings. The AI reads this profile before every generation.',
+    },
+    {
+      label: 'The Generation Engine',
+      description:
+        'An Azure Function dynamically builds a multi-section system prompt from the voice profile and sends it to Claude. Supports both fresh generation and revision passes, where the previous draft and revision notes are included in the prompt.',
+    },
+    {
+      label: 'The Publishing Layer',
+      description:
+        'A second Azure Function authenticates via LinkedIn OAuth 2.0 and posts directly to the member\'s feed using the LinkedIn REST API. An optional first comment is posted immediately after, keeping the post body clean.',
+    },
+  ],
+
+  innovations: [
+    {
+      letter: 'A',
+      title: 'Dynamic System Prompt Construction',
+      description:
+        'Rather than using a static prompt, the generation function reads the voice profile at runtime and assembles a structured system prompt with discrete sections for identity, style, post structure, and guardrails. This means changing the profile immediately changes every future post — no code changes required.',
+    },
+    {
+      letter: 'B',
+      title: 'Stateful Revision Loop',
+      description:
+        'The draft review page passes the current draft and revision notes back to the same generation endpoint. The function detects the presence of both fields and switches to a revision-mode prompt, preserving topic and voice while applying targeted changes.',
+    },
+    {
+      letter: 'C',
+      title: 'OAuth 2.0 Token Flow with Scope Isolation',
+      description:
+        'A standalone Python script handles the full LinkedIn OAuth exchange locally, opening the authorization URL in the browser, catching the redirect on a local server, and exchanging the code for a token. Scope selection was carefully isolated — w_member_social for publishing and OpenID Connect for identity — after navigating LinkedIn\'s multi-tier API product system.',
+    },
+  ],
+
+  results: [
+    {
+      label: 'End-to-End Speed',
+      description:
+        'Reduced time from topic to published LinkedIn post to under 2 minutes, including draft review.',
+    },
+    {
+      label: 'Voice Consistency',
+      description:
+        'Every generated post reflects the configured tone, sentence style, CTA format, and word preferences — without manual editing in most cases.',
+    },
+    {
+      label: 'Full Publishing Automation',
+      description:
+        'Posts publish directly to LinkedIn from the app, including the first comment, with no manual copy-paste or platform switching required.',
+    },
+  ],
+
+  stackCategories: [
+    { label: 'Frontend', value: 'React, Vite, Tailwind CSS, React Router, Axios' },
+    { label: 'Backend', value: 'Azure Functions (Python), Azure Table Storage, Azurite' },
+    { label: 'AI', value: 'Anthropic Claude API (claude-sonnet-4-5)' },
+    { label: 'Publishing', value: 'LinkedIn REST API (OAuth 2.0, OpenID Connect)' },
+    { label: 'Patterns', value: 'Dynamic Prompt Construction, Stateful Revision Loop, Serverless HTTP Triggers, Voice Profile as Config' },
+  ],
+},
+
 ]
 
 export function getCaseStudyBySlug(slug: string): CaseStudy | undefined {
