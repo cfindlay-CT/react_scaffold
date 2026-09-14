@@ -15,6 +15,7 @@ interface ChatResponseBody {
 const API_URL = import.meta.env.VITE_CHAT_API_URL ?? 'http://localhost:7071/api/chat'
 const API_KEY = import.meta.env.VITE_CHAT_API_KEY ?? ''
 const SESSION_STORAGE_KEY = 'book_chat_session_id'
+const HISTORY_STORAGE_KEY = 'book_chat_history'
 const GREETING = "Hi! I'm Clinton's booking assistant. Tell me a bit about what you'd like to discuss and I'll find a time that works."
 
 function loadSessionId(): string | null {
@@ -33,12 +34,29 @@ function saveSessionId(id: string) {
   }
 }
 
+function loadHistory(): ChatTurn[] {
+  try {
+    const stored = window.sessionStorage.getItem(HISTORY_STORAGE_KEY)
+    return stored ? JSON.parse(stored) : []
+  } catch {
+    return []
+  }
+}
+
+function saveHistory(history: ChatTurn[]) {
+  try {
+    window.sessionStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history))
+  } catch {
+    // sessionStorage unavailable (private mode, etc), or corrupt JSON - fine, just won't persist across reload
+  }
+}
+
 export default function Book() {
   const [messages, setMessages] = useState<ChatTurn[]>([{ role: 'assistant', content: GREETING }])
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
   const sessionIdRef = useRef<string | null>(loadSessionId())
-  const historyRef = useRef<ChatTurn[]>([])
+  const historyRef = useRef<ChatTurn[]>(loadHistory())
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -74,6 +92,7 @@ export default function Book() {
       sessionIdRef.current = data.session_id
       saveSessionId(data.session_id)
       historyRef.current = data.history ?? historyRef.current
+      saveHistory(historyRef.current)
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
     } catch (err) {
       console.error('[book-chat]', err)
