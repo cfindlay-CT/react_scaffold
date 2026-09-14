@@ -1,225 +1,126 @@
-import { useState } from 'react'
-import { BOOKING_WINDOW_WEEKS, weeklySchedule, blockedDates } from '../data/availability'
+import { useEffect, useRef, useState } from 'react'
+import './Book.css'
+
+interface ChatTurn {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+interface ChatResponseBody {
+  session_id: string
+  reply: string
+  history: ChatTurn[]
+}
+
+const API_URL = import.meta.env.VITE_CHAT_API_URL ?? 'http://localhost:7071/api/chat'
+const API_KEY = import.meta.env.VITE_CHAT_API_KEY ?? ''
+const SESSION_STORAGE_KEY = 'book_chat_session_id'
+const GREETING = "Hi! I'm Clinton's booking assistant. Tell me a bit about what you'd like to discuss and I'll find a time that works."
+
+function loadSessionId(): string | null {
+  try {
+    return window.sessionStorage.getItem(SESSION_STORAGE_KEY)
+  } catch {
+    return null
+  }
+}
+
+function saveSessionId(id: string) {
+  try {
+    window.sessionStorage.setItem(SESSION_STORAGE_KEY, id)
+  } catch {
+    // sessionStorage unavailable (private mode, etc) - fine, just won't persist across reload
+  }
+}
 
 export default function Book() {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [selectedSlot, setSelectedSlot] = useState<string | null>(null)
-  const [form, setForm] = useState({ name: '', email: '', note: '' })
-  const [submitted, setSubmitted] = useState(false)
+  const [messages, setMessages] = useState<ChatTurn[]>([{ role: 'assistant', content: GREETING }])
+  const [input, setInput] = useState('')
+  const [sending, setSending] = useState(false)
+  const sessionIdRef = useRef<string | null>(loadSessionId())
+  const historyRef = useRef<ChatTurn[]>([])
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
 
-  const maxDate = new Date(today)
-  maxDate.setDate(today.getDate() + BOOKING_WINDOW_WEEKS * 7)
+  async function sendMessage() {
+    const text = input.trim()
+    if (!text || sending) return
 
-  function isAvailable(date: Date): boolean {
-    const dayName = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase()
-    const dateStr = date.toISOString().slice(0, 10)
-    if (blockedDates.includes(dateStr)) return false
-    if (date < today || date > maxDate) return false
-    return (weeklySchedule[dayName] ?? []).length > 0
+    setMessages(prev => [...prev, { role: 'user', content: text }])
+    setInput('')
+    setSending(true)
+
+    try {
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+      if (API_KEY) headers['X-Api-Key'] = API_KEY
+
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          session_id: sessionIdRef.current,
+          message: text,
+          history: historyRef.current,
+        }),
+      })
+
+      if (res.status === 429) throw new Error('rate-limited')
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`)
+
+      const data: ChatResponseBody = await res.json()
+      sessionIdRef.current = data.session_id
+      saveSessionId(data.session_id)
+      historyRef.current = data.history ?? historyRef.current
+      setMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
+    } catch (err) {
+      console.error('[book-chat]', err)
+      const message =
+        err instanceof Error && err.message === 'rate-limited'
+          ? "You're sending messages a bit fast - please wait a moment and try again."
+          : 'Sorry, something went wrong reaching the assistant. Please try again.'
+      setMessages(prev => [...prev, { role: 'assistant', content: message }])
+    } finally {
+      setSending(false)
+    }
   }
 
-  const days: Date[] = []
-  const cursor = new Date(today)
-  cursor.setDate(cursor.getDate() - cursor.getDay())
-
-  while (cursor <= maxDate || days.length % 7 !== 0) {
-    days.push(new Date(cursor))
-    cursor.setDate(cursor.getDate() + 1)
-  }
-
-  function buildMailtoLink(): string {
-    if (!selectedDate || !selectedSlot) return ''
-
-    const [hour, minute] = selectedSlot.split(':').map(Number)
-    const start = new Date(selectedDate)
-    start.setHours(hour, minute, 0, 0)
-
-    const end = new Date(start)
-    end.setMinutes(end.getMinutes() + 15)
-
-    const timeLabel = start.toLocaleString('en-US', {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      timeZoneName: 'short',
-    })
-
-    const subject = encodeURIComponent(`15-min call request — ${timeLabel}`)
-    const body = encodeURIComponent(
-      `Hi Clinton,\n\nI'd like to book a 15-min call.\n\nTime: ${timeLabel}\nName: ${form.name}\nEmail: ${form.email}\n\n${form.note}`
-    )
-
-    return `mailto:cfindlay@comtopllc.com?subject=${subject}&body=${body}`
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') sendMessage()
   }
 
   return (
     <div className="container">
       <h1>Book a 15-min Call</h1>
-      <p>Pick a date, then choose a time that works for you.</p>
+      <p>Chat with my booking assistant to find a time that works for you.</p>
 
-      {/* 1. Calendar grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px', maxWidth: '420px' }}>
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => (
-          <div key={d} style={{ textAlign: 'center', fontWeight: 'bold', padding: '4px' }}>{d}</div>
-        ))}
-        {days.map((day, i) => {
-          const available = isAvailable(day)
-          const isSelected = selectedDate?.toDateString() === day.toDateString()
-          const isPast = day < today
-          return (
-            <button
-              key={i}
-              onClick={() => available && setSelectedDate(day)}
-              disabled={!available}
-              style={{
-                padding: '8px',
-                background: isSelected ? '#0078d4' : available ? '#e8f4fd' : 'transparent',
-                color: isSelected ? 'white' : isPast ? '#ccc' : 'inherit',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                cursor: available ? 'pointer' : 'default',
-              }}
-            >
-              {day.getDate()}
-            </button>
-          )
-        })}
+      <div className="chat-panel">
+        <div className="chat-messages">
+          {messages.map((msg, i) => (
+            <div key={i} className={`chat-msg chat-msg-${msg.role}`}>
+              {msg.content}
+            </div>
+          ))}
+          {sending && <div className="chat-msg chat-msg-assistant chat-msg-pending">...</div>}
+          <div ref={messagesEndRef} />
+        </div>
+
+        <div className="chat-inputrow">
+          <input
+            type="text"
+            placeholder="Type a message..."
+            value={input}
+            disabled={sending}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <button onClick={sendMessage} disabled={sending || !input.trim()}>
+            Send
+          </button>
+        </div>
       </div>
-
-      {/* 2. Time slots — only shows when a date is selected */}
-      {selectedDate && (() => {
-        const dayName = selectedDate.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase()
-        const slots = weeklySchedule[dayName] ?? []
-        return (
-          <div style={{ marginTop: '24px' }}>
-            <h2>{selectedDate.toDateString()}</h2>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '12px' }}>
-              {slots.map(slot => {
-                const [hour, minute] = slot.split(':').map(Number)
-                const slotDate = new Date(selectedDate)
-                slotDate.setHours(hour, minute, 0, 0)
-                const label = slotDate.toLocaleTimeString('en-US', {
-                  hour: 'numeric',
-                  minute: '2-digit',
-                  timeZoneName: 'short',
-                })
-                return (
-                  <button
-                    key={slot}
-                    onClick={() => setSelectedSlot(slot)}
-                    style={{
-                      padding: '8px 16px',
-                      border: '1px solid #0078d4',
-                      borderRadius: '4px',
-                      background: selectedSlot === slot ? '#0078d4' : 'white',
-                      color: selectedSlot === slot ? 'white' : '#0078d4',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {label}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-        )
-      })()}
-
-      {/* 3. Booking form — only shows when a slot is selected */}
-      {selectedSlot && (
-        <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '360px' }}>
-          <h3>Your details</h3>
-          <input
-            placeholder="Your name"
-            value={form.name}
-            onChange={e => setForm({ ...form, name: e.target.value })}
-            style={{ padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-          />
-          <input
-            placeholder="Your email"
-            value={form.email}
-            onChange={e => setForm({ ...form, email: e.target.value })}
-            style={{ padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-          />
-          <textarea
-            placeholder="What would you like to discuss? (optional)"
-            value={form.note}
-            onChange={e => setForm({ ...form, note: e.target.value })}
-            style={{ padding: '8px', border: '1px solid #ddd', borderRadius: '4px', minHeight: '80px' }}
-          />
-          <a
-            href={buildMailtoLink()}
-            onClick={() => setSubmitted(true)}
-            style={{
-              display: 'block',
-              padding: '10px',
-              background: !form.name || !form.email ? '#ccc' : '#0078d4',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: !form.name || !form.email ? 'default' : 'pointer',
-              textAlign: 'center',
-              textDecoration: 'none',
-              pointerEvents: !form.name || !form.email ? 'none' : 'auto',
-            }}
-          >
-            Request this time
-          </a>
-        </div>
-      )}
-
-      {submitted && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0,0,0,0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 100,
-        }}>
-          <div style={{
-            background: 'white',
-            borderRadius: '8px',
-            padding: '32px',
-            maxWidth: '360px',
-            textAlign: 'center',
-          }}>
-            <h2>Request sent!</h2>
-            <p>Thanks {form.name}, Clinton will reply to <strong>{form.email}</strong> to confirm your time.</p>
-
-            <hr style={{ margin: '16px 0', border: 'none', borderTop: '1px solid #eee' }} />
-
-            <p style={{ fontSize: '14px', color: '#666' }}>No email app opened? Send manually:</p>
-            <div style={{ textAlign: 'left', fontSize: '13px', background: '#f5f5f5', padding: '12px', borderRadius: '4px' }}>
-              <p><strong>To:</strong> cfindlay@comtopllc.com</p>
-              <p><strong>Subject:</strong> 15-min call request</p>
-              <p><strong>Body:</strong> Hi Clinton, I'd like to book a 15-min call. Name: {form.name}, Email: {form.email}</p>
-            </div>
-
-            <button
-              onClick={() => setSubmitted(false)}
-              style={{
-                marginTop: '16px',
-                padding: '10px 24px',
-                background: '#0078d4',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-
     </div>
   )
 }

@@ -27,6 +27,9 @@ jobs:
           action: upload
           app_location: /
           output_location: dist
+        env:
+          VITE_CHAT_API_KEY: ${{ secrets.VITE_CHAT_API_KEY }}
+          VITE_CHAT_API_URL: ${{ secrets.VITE_CHAT_API_URL }}
 
   close_pull_request:
     name: Close Pull Request
